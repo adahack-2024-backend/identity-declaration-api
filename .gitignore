@@ -1,0 +1,7 @@
+dist
+built
+node_modules
+*-lock.json
+.env
+desktop.ini
+.vscode
