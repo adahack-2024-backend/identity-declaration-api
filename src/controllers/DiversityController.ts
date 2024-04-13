@@ -30,6 +30,9 @@ export class DiversityController {
                 });
             }
 
+            const isInternal = req.url.split("/").includes('internal');
+            if(isInternal) data.isInternalResponse = true;
+
             await this.diversityService.submitResponse(data);
             res.json({
                 status: 'success',

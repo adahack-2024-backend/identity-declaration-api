@@ -4,11 +4,11 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 
 ## Endpoints para fornecimento de dados do formulário
 
-### GET /diversity/internal/questions
+### GET /diversity/questions
 
 - **Descrição:** Fornece as perguntas do formulário de diversidade para funcionários internos.
 - **Método HTTP:** GET
-- **URL:** `/diversity/internal/questions`
+- **URL:** `api/diversity/questions`
 - **Autenticação Requerida:** Sim
 - **Parâmetros de Requisição:** Não aplicável.
 - **Formato de Resposta Esperado:**
@@ -92,11 +92,11 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 - **Códigos de Resposta Possíveis: 200 (OK), 401 (Não Autorizado), 500 (Erro Interno do Servidor)**
 ##
 
-### GET /diversity/external/questions
+### GET /diversity/questions
 
 - **Descrição:** Fornece as perguntas do formulário de diversidade para candidatos externos.
 - **Método HTTP:** GET
-- **URL:** `/diversity/external/questions`
+- **URL:** `api/diversity/questions`
 - **Autenticação Requerida:** Não
 - **Parâmetros de Requisição:** Não aplicável.
 - **Formato de Resposta Esperado:**
@@ -127,17 +127,19 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 
 - **Descrição:** Permite a submissão de respostas do formulário de diversidade por funcionários internos.
 - **Método HTTP:** POST
-- **URL:** `/diversity/internal/submit`
+- **URL:** `api/diversity/internal/submit`
 - **Autenticação Requerida:** Sim
 - **Parâmetros de Requisição:**
 ```json
 {
-  "token": "string",
   "responses": {
-    "gender": "string",
-    "ethnicity": "string",
-    "lgbtqia": "boolean",
-    "parent": "boolean"
+    "ageGroupCode": "25-34",
+    "genderCode": "non-binary",
+    "ethnicityCode": "hispanic-latino",
+    "disabilityCode": "visual-impairment",
+    "lgbtqia": true,
+    "parent": true,
+    "isInternalResponse": true (opcional)
   }
 }
 ```
@@ -155,16 +157,18 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 
 - **Descrição:** Permite a submissão de respostas do formulário de diversidade por candidatos externos.
 - **Método HTTP:** POST
-- **URL:** `/diversity/external/submit`
+- **URL:** `api/diversity/external/submit`
 - **Autenticação Requerida:** Não
 - **Parâmetros de Requisição:**
 ```json
-{  
+{
   "responses": {
-    "gender": "string",
-    "ethnicity": "string",
-    "lgbtqia": "boolean",
-    "parent": "boolean"
+    "ageGroupCode": "25-34",
+    "genderCode": "non-binary",
+    "ethnicityCode": "hispanic-latino",
+    "disabilityCode": "visual-impairment",
+    "lgbtqia": true,
+    "parent": true
   }
 }
 ```
@@ -180,7 +184,7 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 
 ## Autenticação
 
-Funcionários precisam fornecer um `token` válido em cada requisição ao endpoint `/diversity/internal/questions` e `/diversity/internal/submit`. O token é obtido no login.
+Funcionários precisam fornecer um `token` válido em cada requisição ao endpoint `api/diversity/internal/questions` e `api/diversity/internal/submit`. O token é obtido no login.
 
 ## Segurança HTTPS
 

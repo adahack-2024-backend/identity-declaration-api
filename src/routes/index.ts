@@ -7,7 +7,8 @@ const router = express.Router();
 const diversityRepository = new DiversityRepository();
 const diversityService = new DiversityService(diversityRepository);
 const diversityController = new DiversityController(diversityService);
-router.get('/diversity/external/questions', (req, res) => diversityController.getQuestions(req, res));
+router.get('/diversity/questions', (req, res) => diversityController.getQuestions(req, res));
 router.post('/diversity/external/submit', (req, res) => diversityController.submitResponse(req, res));
+router.post('/diversity/internal/submit', (req, res) => diversityController.submitResponse(req, res));
 
 export default router;

@@ -5,4 +5,5 @@ export interface SubmissionData {
     disabilityCode: string;
     lgbtqia: boolean;
     parent: boolean;
+    isInternalResponse?: boolean;
 }
