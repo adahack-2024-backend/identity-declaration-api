@@ -4,6 +4,7 @@
   "description": "A API do Formulário de Diversidade é responsável por fornecer as perguntas e opções de resposta para os formulários de diversidade de funcionários internos e candidatos externos.",
   "main": "index.js",
   "scripts": {
+    "seed": "node src/seed.js",
     "dev": "nodemon",
     "start": "ts-node src/app.ts",
     "test:unit": "jest --verbose ./tests/unit/**/**/*.spec.ts --coverage",
@@ -13,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.12.1",
     "cors": "^2.8.5",
     "date-fns-tz": "^3.0.1",
     "dotenv": "^16.4.5",

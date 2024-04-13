@@ -1,42 +1,41 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import { routes } from './routes';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import cors from 'cors'
+import cors from 'cors';
 import winston from 'winston';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-; (async () => {
-  const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env'
-  dotenv.config({ path: envFile })
+import routes from './routes'; 
+
+(async () => {
+  const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+  dotenv.config({ path: envFile });
 
   const logger = winston.createLogger({
     level: 'debug',
     format: winston.format.combine(
       winston.format.colorize(),
-      winston.format((info) => {
-        info.timestamp = format(new Date(), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR });
-        return info;
-      })(),
-      winston.format.simple(),
+      winston.format.timestamp({
+        format: () => format(new Date(), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR })
+      }),
+      winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
     ),
     transports: [new winston.transports.Console()]
-  })
+  });
 
   const app = express();
   app.use(morgan("dev", { stream: { write: message => logger.info(message.trim()) } }));
   app.use(express.json());
-  app.use(helmet())
-  app.use(cors())
+  app.use(helmet());
+  app.use(cors());
   app.use(express.urlencoded({ extended: true }));
 
-  app.use(routes);
+  app.use('/api', routes);  
 
-  const port = process.env.PORT
-
+  const port = process.env.PORT || 3000;
   app.listen(port, () => {
-    logger.info(`Server started! Alguma coisa`);
+    logger.info(`Server started on port ${port}. Ready to handle requests.`);
   });
-})()
+})();
