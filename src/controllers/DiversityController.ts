@@ -1,19 +1,18 @@
 import { Request, Response } from 'express';
-import { DiversityRepository } from '../repositories/DiversityRepository';
-import { QuestionsResponse } from '../models/QuestionsResponse';
+import { DiversityService } from '../services/DiversityService'; 
+import { SubmissionData } from '../models/SubmissionData';
 
 export class DiversityController {
-    private repository: DiversityRepository;
+    private diversityService: DiversityService;
 
-    constructor(repository: DiversityRepository) {
-        this.repository = repository;
+    constructor(diversityService: DiversityService) {
+        this.diversityService = diversityService;
     }
 
     public async getQuestions(req: Request, res: Response) {
         try {
-            const questions = await this.repository.getQuestions();
-            const response: QuestionsResponse = { questions };
-            res.json(response);
+            const questions = await this.diversityService.getQuestions();
+            res.json({ questions });
         } catch (error) {
             console.error("Error fetching questions:", error);
             res.status(500).send('Erro ao recuperar as perguntas.');
@@ -22,16 +21,16 @@ export class DiversityController {
 
     public async submitResponse(req: Request, res: Response) {
         try {
-            const { ageGroup, gender, ethnicity, lgbtqia, parent, disability } = req.body.responses;
-            
-            if (typeof gender !== 'string' || typeof ethnicity !== 'string' || typeof lgbtqia !== 'boolean' || typeof parent !== 'boolean') {
+            const data: SubmissionData = req.body.responses;
+
+            if (!this.validateSubmissionData(data)) {
                 return res.status(400).json({
                     status: 'error',
                     message: 'Dados de submissão inválidos.'
                 });
             }
 
-            await this.repository.saveResponse({ ageGroup, gender, ethnicity, lgbtqia, parent, disability });
+            await this.diversityService.submitResponse(data);
             res.json({
                 status: 'success',
                 message: 'Respostas submetidas com sucesso.'
@@ -40,5 +39,12 @@ export class DiversityController {
             console.error("Error submitting responses:", error);
             res.status(500).send('Erro interno do servidor.');
         }
+    }
+
+    private validateSubmissionData(data: SubmissionData): boolean {
+        return typeof data.genderCode === 'string' &&
+               typeof data.ethnicityCode === 'string' &&
+               typeof data.lgbtqia === 'boolean' &&
+               typeof data.parent === 'boolean';
     }
 }

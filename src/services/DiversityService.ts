@@ -1,4 +1,5 @@
 import { DiversityRepository } from '../repositories/DiversityRepository';
+import { SubmissionData } from '../models/SubmissionData'; 
 
 export class DiversityService {
     private responseRepository: DiversityRepository;
@@ -7,7 +8,11 @@ export class DiversityService {
         this.responseRepository = responseRepository;
     }
 
-    async submitResponse(data: { ageGroup: string, gender: string; ethnicity: string; lgbtqia: boolean; parent: boolean, disability: string }) {
+    async getQuestions() {
+        return this.responseRepository.getQuestions();
+    }
+
+    async submitResponse(data: SubmissionData) {       
         return this.responseRepository.saveResponse(data);
     }
 }
