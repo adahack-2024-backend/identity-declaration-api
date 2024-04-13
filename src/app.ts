@@ -37,6 +37,6 @@ import { ptBR } from 'date-fns/locale';
   const port = process.env.PORT
 
   app.listen(port, () => {
-    logger.info(`Server started!`);
+    logger.info(`Server started! Alguma coisa`);
   });
 })()
