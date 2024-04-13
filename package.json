@@ -1,7 +1,7 @@
 {
   "name": "identity-declaration-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "A API do Formulário de Diversidade é responsável por fornecer as perguntas e opções de resposta para os formulários de diversidade de funcionários internos e candidatos externos.",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
