@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import { validate } from 'uuid';
+import { PrismaClient, User } from '@prisma/client';
+import { hash, compare } from 'bcrypt';
 
-export class UserRepository {
+class UserRepository {
     private prisma = new PrismaClient();
 
     public async findUserByEmail(email: string) {
@@ -10,7 +10,27 @@ export class UserRepository {
         });
     }
 
-     validatePassword(password: string, passwordReceived: string) : boolean {
+    async createUser(email: string, plainTextPassword: string): Promise<User> {
+        const password = await hash(plainTextPassword, 10); // Hash da senha com bcrypt
+        const user = await this.prisma.user.create({
+            data: {
+                email,
+                password,
+            },
+        });
+        return user;
+    }
+
+    // refatorar
+    validatePassword(password: string, passwordReceived: string): boolean {
         return password === passwordReceived;
     }
+
+    async comparePassword(userPassword: string, candidatePassword: string): Promise<boolean> {
+        return await compare(candidatePassword, userPassword);
+      }
 }
+
+const userRepository = new UserRepository();
+
+export { userRepository }

@@ -1,21 +1,32 @@
-import { error } from 'console';
-import { UserRepository } from '../repositories/UserRepository';
+import { sign } from 'jsonwebtoken';
+import { userRepository } from '../repositories/UserRepository';
+import { UserModel } from '../models/UserModel';
 
-export class AuthService {
-    private userRepository: UserRepository;
-
-    constructor(userRepository: UserRepository) {
-        this.userRepository = userRepository;
+class AuthService {
+    private generateToken(user: UserModel) {
+        const secret = process.env.JWT_SECRET!
+        const payload = {
+            email: user.email,
+        };
+        return sign(payload, secret, { expiresIn: '1h' });
     }
-
-     async login(email:string, password:string) {
-         const user = await this.userRepository.findUserByEmail(email)
-         if (!user){
-            throw new Error ('Usuário não encontrado')
-         }
-         if (this.userRepository.validatePassword (password, user.password)){
-            throw new Error ('Senha incorreta')
-         }
+    
+    async login(email: string, password: string) {
+        const user = await userRepository.findUserByEmail(email);
+        if (!user) {
+          throw new Error('User not found');
+        }
+    
+        const valid = await userRepository.comparePassword(user.password, password);
+        if (!valid) {
+          throw new Error('Invalid password');
+        }
+    
+        const token = this.generateToken(user);
+        return { token };
+      }
 }
 
-}
+const authService = new AuthService();
+
+export { authService }

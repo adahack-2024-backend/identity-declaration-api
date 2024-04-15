@@ -1,17 +1,11 @@
 import { Request, Response } from 'express';
-import { DiversityService } from '../services/DiversityService'; 
 import { SubmissionData } from '../models/SubmissionData';
+import { diversityService } from '../services/DiversityService';
 
-export class DiversityController {
-    private diversityService: DiversityService;
-
-    constructor(diversityService: DiversityService) {
-        this.diversityService = diversityService;
-    }
-
+class DiversityController {
     public async getQuestions(req: Request, res: Response) {
         try {
-            const questions = await this.diversityService.getQuestions();
+            const questions = await diversityService.getQuestions();
             res.json({ questions });
         } catch (error) {
             console.error("Error fetching questions:", error);
@@ -30,7 +24,7 @@ export class DiversityController {
                 });
             }
 
-            await this.diversityService.submitResponse(data);
+            await diversityService.submitResponse(data);
             res.json({
                 status: 'success',
                 message: 'Respostas submetidas com sucesso.'
@@ -43,8 +37,12 @@ export class DiversityController {
 
     private validateSubmissionData(data: SubmissionData): boolean {
         return typeof data.genderCode === 'string' &&
-               typeof data.ethnicityCode === 'string' &&
-               typeof data.lgbtqia === 'boolean' &&
-               typeof data.parent === 'boolean';
+            typeof data.ethnicityCode === 'string' &&
+            typeof data.lgbtqia === 'boolean' &&
+            typeof data.parent === 'boolean';
     }
 }
+
+const diversityController = new DiversityController();
+
+export { diversityController }
