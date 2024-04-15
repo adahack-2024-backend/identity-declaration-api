@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
 import { Question } from '../models/Question';
-import { SubmissionData } from '../models/SubmissionData'; 
+import { SubmissionData } from '../models/SubmissionData';
 
-export class DiversityRepository {
+class DiversityRepository {
     private filePath = path.join(__dirname, '../../resources/questions.json');
     private prisma = new PrismaClient();
 
@@ -14,32 +14,24 @@ export class DiversityRepository {
         return questions;
     }
 
-    public async saveResponse(data: SubmissionData) {     
-        console.log("Buscando AgeGroup com código:", data.ageGroupCode);   
+    public async saveResponse(data: SubmissionData) {
         const ageGroup = await this.prisma.ageGroup.findUnique({
             where: { code: data.ageGroupCode }
         });
-        console.log("AgeGroup encontrado:", ageGroup);
 
-        console.log("Buscando Gender com código:", data.genderCode);
         const gender = await this.prisma.gender.findUnique({
             where: { code: data.genderCode }
         });
-        console.log("Gender encontrado:", gender);
 
-        console.log("Buscando Ethnicity com código:", data.ethnicityCode);
         const ethnicity = await this.prisma.ethnicity.findUnique({
             where: { code: data.ethnicityCode }
         });
-        console.log("Ethnicity encontrado:", ethnicity);
 
-        console.log("Buscando Disability com código:", data.disabilityCode);
         const disability = await this.prisma.disability.findUnique({
             where: { code: data.disabilityCode }
         });
-        console.log("Disability encontrado:", disability);
 
-        
+
 
         if (!ageGroup || !gender || !ethnicity || !disability) {
             throw new Error('One of the entities was not found.');
@@ -58,3 +50,7 @@ export class DiversityRepository {
         });
     }
 }
+
+const diversityRepository = new DiversityRepository();
+
+export { diversityRepository }

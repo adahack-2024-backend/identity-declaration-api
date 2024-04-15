@@ -15,40 +15,50 @@ model AgeGroup {
 }
 
 model Gender {
-  id       Int       @id @default(autoincrement())
-  code     String    @unique
-  value    String
+  id        Int                 @id @default(autoincrement())
+  code      String              @unique
+  value     String
   responses DiversityResponse[]
 }
 
 model Ethnicity {
-  id       Int       @id @default(autoincrement())
-  code     String    @unique
-  value    String
+  id        Int                 @id @default(autoincrement())
+  code      String              @unique
+  value     String
   responses DiversityResponse[]
 }
 
 model Disability {
-  id       Int       @id @default(autoincrement())
-  code     String    @unique
-  value    String
+  id        Int                 @id @default(autoincrement())
+  code      String              @unique
+  value     String
   responses DiversityResponse[]
 }
 
 model DiversityResponse {
-  id                 Int          @id @default(autoincrement())
+  id                 Int        @id @default(autoincrement())
   ageGroupId         Int
-  ageGroup           AgeGroup     @relation(fields: [ageGroupId], references: [id])
+  ageGroup           AgeGroup   @relation(fields: [ageGroupId], references: [id])
   genderId           Int
-  gender             Gender       @relation(fields: [genderId], references: [id])
+  gender             Gender     @relation(fields: [genderId], references: [id])
   ethnicityId        Int
-  ethnicity          Ethnicity    @relation(fields: [ethnicityId], references: [id])
+  ethnicity          Ethnicity  @relation(fields: [ethnicityId], references: [id])
   lgbtqia            Boolean
   parent             Boolean
   disabilityId       Int
-  disability         Disability   @relation(fields: [disabilityId], references: [id])
-  createdAt          DateTime     @default(now())
-  isInternalResponse Boolean      @default(false)
+  disability         Disability @relation(fields: [disabilityId], references: [id])
+  createdAt          DateTime   @default(now())
+  isInternalResponse Boolean    @default(false)
 
   @@map("diversity_responses")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("users")
 }

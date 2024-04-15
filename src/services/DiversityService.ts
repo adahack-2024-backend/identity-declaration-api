@@ -1,18 +1,16 @@
-import { DiversityRepository } from '../repositories/DiversityRepository';
-import { SubmissionData } from '../models/SubmissionData'; 
+import { SubmissionData } from '../models/SubmissionData';
+import { diversityRepository } from '../repositories/DiversityRepository';
 
-export class DiversityService {
-    private responseRepository: DiversityRepository;
-
-    constructor(responseRepository: DiversityRepository) {
-        this.responseRepository = responseRepository;
-    }
-
+class DiversityService {
     async getQuestions() {
-        return this.responseRepository.getQuestions();
+        return diversityRepository.getQuestions();
     }
 
-    async submitResponse(data: SubmissionData) {       
-        return this.responseRepository.saveResponse(data);
+    async submitResponse(data: SubmissionData) {
+        return diversityRepository.saveResponse(data);
     }
 }
+
+const diversityService = new DiversityService();
+
+export { diversityService }
