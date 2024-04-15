@@ -31,8 +31,6 @@ class DiversityRepository {
             where: { code: data.disabilityCode }
         });
 
-
-
         if (!ageGroup || !gender || !ethnicity || !disability) {
             throw new Error('One of the entities was not found.');
         }
@@ -45,7 +43,7 @@ class DiversityRepository {
                 disabilityId: disability.id,
                 lgbtqia: data.lgbtqia,
                 parent: data.parent,
-                // isInternalResponse: data.isInternalResponse
+                isInternalResponse: data.isInternalResponse
             }
         });
     }
