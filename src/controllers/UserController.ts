@@ -9,7 +9,7 @@ class UserController {
         try {
             const { email, password } = req.body;
 
-            const userExist = await userService.findUserByEmail(email);
+            const userExist = await userService.findByEmail(email);
             if (userExist) {
                 return res.status(409).json({ message: 'User already exists!' });
             }
@@ -18,6 +18,16 @@ class UserController {
             const newUser = await userService.create(createUserRequest);
 
             res.status(201).json(newUser);
+        } catch (error) {
+            logger.error('Error creating user: %s', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    async findAll(req: Request, res: Response) {
+        try {
+            const users = await userService.findAll();
+            return res.status(200).send(users)
         } catch (error) {
             logger.error('Error creating user: %s', error);
             res.status(500).json({ error: 'Internal server error' });

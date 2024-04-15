@@ -6,13 +6,7 @@ import { UserResponse } from '../models/UserReponse';
 class UserRepository {
     private prisma = new PrismaClient();
 
-    public async findUserByEmail(email: string) {
-        return this.prisma.user.findUnique({
-            where: { email }
-        });
-    }
-
-    async createUser(user: CreateUserRequest): Promise<UserResponse> {
+    async create(user: CreateUserRequest): Promise<UserResponse> {
         const email = user.email;
         const password = await hash(user.password, 10);
         const newUser = await this.prisma.user.create({
@@ -26,6 +20,16 @@ class UserRepository {
             }
         });
         return newUser;
+    }
+
+    async findByEmail(email: string) {
+        return this.prisma.user.findUnique({
+            where: { email }
+        });
+    }
+
+    async findAll() {
+        return this.prisma.user.findMany();
     }
 
     async comparePassword(userPassword: string, candidatePassword: string): Promise<boolean> {

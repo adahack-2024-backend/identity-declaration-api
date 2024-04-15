@@ -10,7 +10,7 @@ class DiversityController {
             res.json({ questions });
         } catch (error) {
             logger.error("Error fetching questions: %s", error);
-            res.status(500).send('Erro ao recuperar as perguntas.');
+            res.status(500).send('Error retrieving questions.');
         }
     }
 
@@ -20,11 +20,11 @@ class DiversityController {
             await diversityService.submitResponse(data);
             res.json({
                 status: 'success',
-                message: 'Respostas submetidas com sucesso.'
+                message: 'Responses submitted successfully.'
             });
         } catch (error) {
             logger.error("Error submitting responses: %s", error);
-            res.status(500).send('Erro interno do servidor.');
+            res.status(500).send('Internal server error.');
         }
     }
 }

@@ -10,7 +10,7 @@ export function validateSubmission(req: Request, res: Response, next: NextFuncti
         typeof data.parent !== 'boolean') {
         return res.status(400).json({
             status: 'error',
-            message: 'Dados de submissão inválidos.'
+            message: 'Invalid submission data.'
         });
     }
 

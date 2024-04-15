@@ -2,7 +2,6 @@ import { sign } from 'jsonwebtoken';
 import { userRepository } from '../repositories/UserRepository';
 import { User } from '../models/User';
 
-
 class AuthService {
   private generateToken(user: User) {
     const secret = process.env.JWT_SECRET!
@@ -13,7 +12,7 @@ class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await userRepository.findUserByEmail(email);
+    const user = await userRepository.findByEmail(email);
     if (!user) {
       throw new Error('User not found');
     }

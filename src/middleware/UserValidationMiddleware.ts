@@ -13,7 +13,7 @@ export async function validateUserData(req: Request, res: Response, next: NextFu
         }).run(req);
 
         if (!emailInvalid.isEmpty()) return res.status(400).send({ error: 'email not valid' });
-        if (!passwordInvalid.isEmpty()) return res.status(400).send({ error: 'password not valid' });
+        if (!passwordInvalid.isEmpty()) return res.status(400).send({ error: 'password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 symbol and a minimum length of 6 characters' });
 
         next();
     } catch (error) {
@@ -22,7 +22,3 @@ export async function validateUserData(req: Request, res: Response, next: NextFu
         next(error);
     }
 }
-
-
-
-
