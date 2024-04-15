@@ -1,5 +1,7 @@
 import { PrismaClient, User } from '@prisma/client';
 import { hash, compare } from 'bcrypt';
+import { CreateUserRequest } from '../models/CreateUserRequest';
+import { UserResponse } from '../models/UserReponse';
 
 class UserRepository {
     private prisma = new PrismaClient();
@@ -10,20 +12,20 @@ class UserRepository {
         });
     }
 
-    async createUser(email: string, plainTextPassword: string): Promise<User> {
-        const password = await hash(plainTextPassword, 10); // Hash da senha com bcrypt
-        const user = await this.prisma.user.create({
+    async createUser(user: CreateUserRequest): Promise<UserResponse> {
+        const email = user.email;
+        const password = await hash(user.password, 10);
+        const newUser = await this.prisma.user.create({
             data: {
                 email,
-                password,
+                password
             },
+            select: {
+                id: true,
+                email: true
+            }
         });
-        return user;
-    }
-
-    // refatorar
-    validatePassword(password: string, passwordReceived: string): boolean {
-        return password === passwordReceived;
+        return newUser;
     }
 
     async comparePassword(userPassword: string, candidatePassword: string): Promise<boolean> {

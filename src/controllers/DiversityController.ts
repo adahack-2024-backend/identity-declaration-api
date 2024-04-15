@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { SubmissionData } from '../models/SubmissionData';
 import { diversityService } from '../services/DiversityService';
+import logger from '../utils/logger';
 
 class DiversityController {
     public async getQuestions(req: Request, res: Response) {
@@ -8,7 +9,7 @@ class DiversityController {
             const questions = await diversityService.getQuestions();
             res.json({ questions });
         } catch (error) {
-            console.error("Error fetching questions:", error);
+            logger.error("Error fetching questions: %s", error);
             res.status(500).send('Erro ao recuperar as perguntas.');
         }
     }
@@ -16,30 +17,15 @@ class DiversityController {
     public async submitResponse(req: Request, res: Response) {
         try {
             const data: SubmissionData = req.body.responses;
-
-            if (!this.validateSubmissionData(data)) {
-                return res.status(400).json({
-                    status: 'error',
-                    message: 'Dados de submissão inválidos.'
-                });
-            }
-
             await diversityService.submitResponse(data);
             res.json({
                 status: 'success',
                 message: 'Respostas submetidas com sucesso.'
             });
         } catch (error) {
-            console.error("Error submitting responses:", error);
+            logger.error("Error submitting responses: %s", error);
             res.status(500).send('Erro interno do servidor.');
         }
-    }
-
-    private validateSubmissionData(data: SubmissionData): boolean {
-        return typeof data.genderCode === 'string' &&
-            typeof data.ethnicityCode === 'string' &&
-            typeof data.lgbtqia === 'boolean' &&
-            typeof data.parent === 'boolean';
     }
 }
 

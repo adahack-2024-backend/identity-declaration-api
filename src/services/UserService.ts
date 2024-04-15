@@ -1,20 +1,20 @@
 import { userRepository } from "../repositories/UserRepository";
-import { UserModel } from "../models/UserModel";
+import { CreateUserRequest } from "../models/CreateUserRequest";
+import { UserResponse } from "../models/UserReponse";
 
 class UserService {
-    async create(email: string, password: string): Promise<UserModel> {
-        const userEmail = await userRepository.findUserByEmail(email);
+    async create(user: CreateUserRequest): Promise<UserResponse> {
+        const userReponse = await this.findUserByEmail(user.email);
 
-        if(userEmail) {
+        if (userReponse) {
             throw new Error('User already exists!')
         }
 
-        const newUser = await userRepository.createUser(email, password);
-
+        const newUser = await userRepository.createUser(user);
         return newUser
     }
 
-    async findByEmail(email: string) {
+    async findUserByEmail(email: string) {
         const user = await userRepository.findUserByEmail(email)
         return user
     }
@@ -22,4 +22,4 @@ class UserService {
 
 const userService = new UserService();
 
-export {userService}
+export { userService }
