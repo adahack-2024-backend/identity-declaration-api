@@ -2,13 +2,31 @@
 
 A API do Formulário de Diversidade é responsável por fornecer as perguntas e opções de resposta para os formulários de diversidade de funcionários internos e candidatos externos.
 
+## Como executar o projeto
+
+Para executar o projeto, siga os passos abaixo:
+
+1. Clone o repositório para a sua máquina local.
+    ```bash
+    git clone https://github.com/adahack-2024-backend/identity-declaration-api.git
+    ```
+2. Instale as dependências do projeto.
+    ```bash
+    npm install
+    ```
+3. Crie um arquivo `.env` na raiz do projeto e adicione as variáveis de ambientes presentes no arquivo `.env.example`.
+4. Execute o projeto.
+    ```bash
+    npm start
+    ```
+
 ## Endpoints para fornecimento de dados do formulário
 
-### GET /diversity/internal/questions
+### GET /api/diversity/internal/questions
 
 - **Descrição:** Fornece as perguntas do formulário de diversidade para funcionários internos.
 - **Método HTTP:** GET
-- **URL:** `/diversity/internal/questions`
+- **URL:** `/api/diversity/internal/questions`
 - **Autenticação Requerida:** Sim
 - **Parâmetros de Requisição:** Não aplicável.
 - **Formato de Resposta Esperado:**
@@ -92,11 +110,11 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 - **Códigos de Resposta Possíveis: 200 (OK), 401 (Não Autorizado), 500 (Erro Interno do Servidor)**
 ##
 
-### GET /diversity/external/questions
+### GET /api/diversity/external/questions
 
 - **Descrição:** Fornece as perguntas do formulário de diversidade para candidatos externos.
 - **Método HTTP:** GET
-- **URL:** `/diversity/external/questions`
+- **URL:** `/api/diversity/external/questions`
 - **Autenticação Requerida:** Não
 - **Parâmetros de Requisição:** Não aplicável.
 - **Formato de Resposta Esperado:**
@@ -123,65 +141,142 @@ A API do Formulário de Diversidade é responsável por fornecer as perguntas e 
 - **Códigos de Resposta Possíveis: 200 (OK), 500 (Erro Interno do Servidor)**
 ##
 
-### POST /diversity/internal/submit
+### POST /api/diversity/internal/submit
 
 - **Descrição:** Permite a submissão de respostas do formulário de diversidade por funcionários internos.
 - **Método HTTP:** POST
-- **URL:** `/diversity/internal/submit`
+- **URL:** `/api/diversity/internal/submit`
 - **Autenticação Requerida:** Sim
 - **Parâmetros de Requisição:**
 ```json
 {
-  "token": "string",
   "responses": {
-    "gender": "string",
-    "ethnicity": "string",
-    "lgbtqia": "boolean",
-    "parent": "boolean"
+    "ageGroupCode": "string",
+    "genderCode": "string",
+    "ethnicityCode": "string",
+    "disabilityCode": "string",
+    "lgbtqia": boolean,
+    "parent": boolean
   }
 }
 ```
 - **Formato de Resposta Esperado:**
 ```json
 {
-  "status": "success",
-  "message": "Respostas submetidas com sucesso."
+	"status": "success",
+	"message": "Responses submitted successfully."
 }
 ```
 - **Códigos de Resposta Possíveis: 200 (OK), 400 (Requisição Inválida), 401 (Não Autorizado), 500 (Erro Interno do Servidor)**
 ##
 
-### POST /diversity/external/submit
+### POST /api/diversity/external/submit
 
 - **Descrição:** Permite a submissão de respostas do formulário de diversidade por candidatos externos.
 - **Método HTTP:** POST
-- **URL:** `/diversity/external/submit`
+- **URL:** `/api/diversity/external/submit`
 - **Autenticação Requerida:** Não
 - **Parâmetros de Requisição:**
 ```json
-{  
+{
   "responses": {
-    "gender": "string",
-    "ethnicity": "string",
-    "lgbtqia": "boolean",
-    "parent": "boolean"
+    "ageGroupCode": "string",
+    "genderCode": "string",
+    "ethnicityCode": "string",
+    "disabilityCode": "string",
+    "lgbtqia": boolean,
+    "parent": boolean
   }
 }
 ```
 - **Formato de Resposta Esperado:**
 ```json
 {
-  "status": "success",
-  "message": "Respostas submetidas com sucesso."
+	"status": "success",
+	"message": "Responses submitted successfully."
 }
 ```
 - **Códigos de Resposta Possíveis: 200 (OK), 400 (Requisição Inválida), 500 (Erro Interno do Servidor)**
 ##
 
+### POST /api/login
+
+- **Descrição:** Permite a realização do login dos usuários no sistema.
+- **Método HTTP:** POST
+- **URL:** `/api/login`
+- **Corpo da Requisição:**
+```json
+{
+	"email": "string",
+	"password":"string"
+}
+```
+- **Formato de Resposta Esperado:**
+```json
+{
+	"token": "token JWT"
+}
+```
+### POST /api/user
+
+- **Descrição:** Permite a criação de um novo usuário no sistema.
+- **Método HTTP:** POST
+- **URL:** `/api/user`
+- **Corpo da Requisição:**
+```json
+{
+	"email": "string",
+	"password":"string"
+}
+```
+- **Formato de Resposta Esperado:**
+```json
+{
+	"id": 0,
+	"email": "string"
+}
+```
+
+### GET /api/users
+
+- **Descrição:** Permite o acesso a lista de usuários cadastrados no sistema.
+- **Método HTTP:** GET
+- **URL:** `/api/users`
+- **Autenticação Requerida:** Sim
+- **Formato de Resposta Esperado:**
+```json
+[
+	{
+		"id": 0,
+		"email": "string",
+		"password": "encrypted string",
+		"createdAt": "date",
+		"updatedAt": "date"
+	},
+	{
+		"id": 0,
+		"email": "string",
+		"password": "encrypted string",
+		"createdAt": "date",
+		"updatedAt": "date"
+	}, 
+  ...
+]
+```
 ## Autenticação
 
-Funcionários precisam fornecer um `token` válido em cada requisição ao endpoint `/diversity/internal/questions` e `/diversity/internal/submit`. O token é obtido no login.
+Os candidatos externos não precisam de autenticação para acessar os endpoints `/api/diversity/external/questions` e `/api/diversity/external/submit`.
+
+Já os funcionários internos precisam fornecer um `token` válido em cada requisição aos endpoints `/api/diversity/internal/questions` e `/api/diversity/internal/submit`. O token é obtido no login.
 
 ## Segurança HTTPS
 
 A comunicação com a API deve ser feita usando HTTPS para garantir a segurança. Todas as práticas de segurança da indústria são seguidas, incluindo o armazenamento seguro de tokens e a criptografia de informações sensíveis.
+
+## Tecnologias
+
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
