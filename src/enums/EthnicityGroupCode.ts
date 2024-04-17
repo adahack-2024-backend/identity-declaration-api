@@ -1,4 +1,4 @@
-export enum EthnicityGroupCode {
+export enum Ethnicity {
     White = 'white',
     Black = 'black',
     HispanicLatino = 'hispanic-latino',

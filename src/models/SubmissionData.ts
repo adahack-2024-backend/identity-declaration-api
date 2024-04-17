@@ -3,7 +3,7 @@ export interface SubmissionData {
     genderCode: string;
     ethnicityCode: string;
     disabilityCode: string;
-    lgbtqia: boolean;
-    parent: boolean;
+    lgbtqia: boolean | null;
+    parent: boolean | null;
     isInternalResponse?: boolean;
 }

@@ -1,4 +1,4 @@
-export enum GenderGroupCode {
+export enum Gender {
     CisMale = 'cis-male',
     CisFemale = 'cis-female',
     TransMale = 'trans-male',

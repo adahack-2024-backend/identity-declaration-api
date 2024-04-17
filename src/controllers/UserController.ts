@@ -1,4 +1,3 @@
-// Import necessary types and utilities
 import { Request, Response } from "express";
 import { userService } from "../services/UserService";
 import { CreateUserRequest } from "../models/CreateUserRequest";

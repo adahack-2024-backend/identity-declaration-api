@@ -1,4 +1,4 @@
-export enum DisabilityType {
+export enum Disability {
     VisualImpairment = 'visual-impairment',
     HearingImpairment = 'hearing-impairment',
     MotorDisability = 'motor-disability',
