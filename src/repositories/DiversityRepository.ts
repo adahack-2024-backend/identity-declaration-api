@@ -166,8 +166,8 @@ class DiversityRepository {
 
         return {
             queriesUsed,
-            responseCount,
             totalCount,
+            responseCount,            
             internalCount,
             externalCount
         };

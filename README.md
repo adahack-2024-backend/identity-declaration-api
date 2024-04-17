@@ -263,6 +263,71 @@ Para executar o projeto, siga os passos abaixo:
   ...
 ]
 ```
+
+
+### GET /diversity/internal/responses
+
+- **Descrição:** Permite o acesso às respostas de diversidade registradas, permitindo filtragem por parâmetros específicos como grupo etário, gênero, etnia, deficiência, LGBTQIA, se é pai/mãe e se a resposta é interna.
+- **Método HTTP:** GET
+- **URL:** `/diversity/internal/responses`
+- **Autenticação Requerida:** Sim
+- **Parâmetros de Consulta:** `ageGroupCode`, `genderCode`, `ethnicityCode`, `disabilityCode`, `lgbtqia`, `parent`, `isInternalResponse`
+- **Formato de Resposta Esperado:**
+```json
+{
+    "responses": [
+        {
+            "ageGroup": {
+                "code": "string",
+                "description": "string"
+            },
+            "gender": {
+                "code": "string",
+                "value": "string"
+            },
+            "ethnicity": {
+                "code": "string",
+                "value": "string"
+            },
+            "disability": {
+                "code": "string",
+                "value": "string"
+            },
+            "lgbtqia": true,
+            "parent": true,
+            "isInternalResponse": true,
+            "createdAt": "date"
+        }
+    ]
+}
+```
+
+### GET /diversity/internal/responses/stats
+
+- **Descrição:** Permite o acesso a estatísticas das respostas de diversidade, com base nos mesmos parâmetros de consulta usados para as respostas individuais, permitindo avaliar a distribuição das respostas e comparar internas e externas.
+- **Método HTTP:** GET
+- **URL:** `/diversity/internal/responses/stats`
+- **Autenticação Requerida:** Sim
+- **Parâmetros de Consulta:** `ageGroupCode`, `genderCode`, `ethnicityCode`, `disabilityCode`, `lgbtqia`, `parent`, `isInternalResponse`
+- **Formato de Resposta Esperado:**
+```json
+{
+    "queriesUsed": {
+        "ageGroupCode": "string",
+        "genderCode": "string",
+        "ethnicityCode": "string",
+        "disabilityCode": "string",
+        "lgbtqia": true,
+        "parent": true,
+        "isInternalResponse": true
+    },
+    "totalCount": 500,
+    "responseCount": 100,    
+    "internalCount": 300,
+    "externalCount": 200
+}
+```
+
 ## Autenticação
 
 Os candidatos externos não precisam de autenticação para acessar os endpoints `/api/diversity/external/questions` e `/api/diversity/external/submit`.
