@@ -108,66 +108,158 @@ class DiversityRepository {
 
 
 
-    public async getDiversityStats(queryParams: DiversityQueryParams): Promise<any> {
-        const conditions: any = {};
+    // public async getDiversityStats(queryParams: DiversityQueryParams): Promise<any> {
+    //     const conditions: any = {};
 
+    //     const queriesUsed: any = {};
+    //     Object.entries(queryParams).forEach(([key, value]) => {
+    //         if (value !== undefined) {
+    //             queriesUsed[key] = value;
+    //         }
+    //     });
+
+    //     if (queryParams.ageGroupCode) {
+    //         const ageGroup = await this.prisma.ageGroup.findUnique({
+    //             where: { code: queryParams.ageGroupCode }
+    //         });
+    //         if (ageGroup) conditions.ageGroupId = ageGroup.id;
+    //     }
+
+    //     if (queryParams.genderCode) {
+    //         const gender = await this.prisma.gender.findUnique({
+    //             where: { code: queryParams.genderCode }
+    //         });
+    //         if (gender) conditions.genderId = gender.id;
+    //     }
+
+    //     if (queryParams.ethnicityCode) {
+    //         const ethnicity = await this.prisma.ethnicity.findUnique({
+    //             where: { code: queryParams.ethnicityCode }
+    //         });
+    //         if (ethnicity) conditions.ethnicityId = ethnicity.id;
+    //     }
+
+    //     if (queryParams.disabilityCode) {
+    //         const disability = await this.prisma.disability.findUnique({
+    //             where: { code: queryParams.disabilityCode }
+    //         });
+    //         if (disability) conditions.disabilityId = disability.id;
+    //     }
+
+    //     if (queryParams.lgbtqia !== undefined) conditions.lgbtqia = queryParams.lgbtqia;
+    //     if (queryParams.parent !== undefined) conditions.parent = queryParams.parent;
+    //     if (queryParams.isInternalResponse !== undefined) conditions.isInternalResponse = queryParams.isInternalResponse;
+
+    //     const responseCount = await this.prisma.diversityResponse.count({
+    //         where: conditions
+    //     });
+
+    //     const totalCount = await this.prisma.diversityResponse.count({});
+
+    //     const internalCount = await this.prisma.diversityResponse.count({
+    //         where: { isInternalResponse: true }
+    //     });
+
+    //     const externalCount = await this.prisma.diversityResponse.count({
+    //         where: { isInternalResponse: false }
+    //     });
+
+    //     return {
+    //         queriesUsed,
+    //         totalCount,
+    //         responseCount,            
+    //         internalCount,
+    //         externalCount
+    //     };
+    // }
+
+    public async getDiversityStats(queryParams: DiversityQueryParams): Promise<any> {
+        console.log("queryParams:", queryParams); // Log the entire queryParams object
+    
+        const conditions: any = {};
         const queriesUsed: any = {};
+    
         Object.entries(queryParams).forEach(([key, value]) => {
+            console.log(`Key: ${key}, Value: ${value}, Type: ${typeof value}`); // Log key, value, and type
+    
             if (value !== undefined) {
                 queriesUsed[key] = value;
             }
         });
-
+    
         if (queryParams.ageGroupCode) {
+            console.log("Age group code:", queryParams.ageGroupCode);
+    
             const ageGroup = await this.prisma.ageGroup.findUnique({
                 where: { code: queryParams.ageGroupCode }
             });
+    
             if (ageGroup) conditions.ageGroupId = ageGroup.id;
         }
-
+    
         if (queryParams.genderCode) {
+            console.log("Gender code:", queryParams.genderCode);
+    
             const gender = await this.prisma.gender.findUnique({
                 where: { code: queryParams.genderCode }
             });
+    
             if (gender) conditions.genderId = gender.id;
         }
-
+    
         if (queryParams.ethnicityCode) {
+            console.log("Ethnicity code:", queryParams.ethnicityCode);
+    
             const ethnicity = await this.prisma.ethnicity.findUnique({
                 where: { code: queryParams.ethnicityCode }
             });
+    
             if (ethnicity) conditions.ethnicityId = ethnicity.id;
         }
-
+    
         if (queryParams.disabilityCode) {
+            console.log("Disability code:", queryParams.disabilityCode);
+    
             const disability = await this.prisma.disability.findUnique({
                 where: { code: queryParams.disabilityCode }
             });
+    
             if (disability) conditions.disabilityId = disability.id;
         }
-
-        if (queryParams.lgbtqia !== undefined) conditions.lgbtqia = queryParams.lgbtqia;
-        if (queryParams.parent !== undefined) conditions.parent = queryParams.parent;
-        if (queryParams.isInternalResponse !== undefined) conditions.isInternalResponse = queryParams.isInternalResponse;
-
+    
+        if (queryParams.lgbtqia !== undefined) {
+            console.log("LGBTQIA+:", queryParams.lgbtqia);
+            conditions.lgbtqia = queryParams.lgbtqia;
+        }
+    
+        if (queryParams.parent !== undefined) {
+            console.log("Parent:", queryParams.parent);
+            conditions.parent = queryParams.parent;
+        }
+    
+        if (queryParams.isInternalResponse !== undefined) {
+            console.log("Is internal response:", queryParams.isInternalResponse);
+            conditions.isInternalResponse = queryParams.isInternalResponse;
+        }
+    
         const responseCount = await this.prisma.diversityResponse.count({
             where: conditions
         });
-
+    
         const totalCount = await this.prisma.diversityResponse.count({});
-
+    
         const internalCount = await this.prisma.diversityResponse.count({
             where: { isInternalResponse: true }
         });
-
+    
         const externalCount = await this.prisma.diversityResponse.count({
             where: { isInternalResponse: false }
         });
-
+    
         return {
             queriesUsed,
             totalCount,
-            responseCount,            
+            responseCount,
             internalCount,
             externalCount
         };
