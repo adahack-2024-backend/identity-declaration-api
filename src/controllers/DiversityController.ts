@@ -46,8 +46,12 @@ class DiversityController {
             const responses = await diversityService.getDiversityStats(queryParams);
             res.json({ responses });
         } catch (error) {
-            logger.error("Error fetching diversity responses: %s", error);
-            res.status(500).send('Error retrieving diversity responses.');
+            if (error instanceof Error) {
+                logger.error("Error fetching diversity responses: %s", error);
+                logger.error(error.stack);
+                res.status(500).send('Error retrieving diversity responses.');
+            }
+
         }
     }
 }
