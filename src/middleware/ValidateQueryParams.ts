@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { BooleanString } from '../enums/BooleanString';
 
+interface ExtendedRequest extends Request {
+    parsedQuery: {
+        lgbtqia?: boolean | null;
+        parent?: boolean | null;
+        isInternalResponse?: boolean | null;
+    }
+}
+
 function parseBooleanQueryParam(param: string): boolean | null | undefined {
     if (param === BooleanString.TRUE) return true;
     if (param === BooleanString.FALSE) return false;
@@ -8,23 +16,25 @@ function parseBooleanQueryParam(param: string): boolean | null | undefined {
     return undefined;    
 }
 
-export const validateQueryParamsMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const originalLgbtqia = req.query.lgbtqia;
-    const originalParent = req.query.parent;
-    const originalIsInternalResponse = req.query.isInternalResponse;
+export const validateQueryParamsMiddleware = (req: ExtendedRequest, res: Response, next: NextFunction) => {
+    const originalLgbtqia = req.query.lgbtqia as string;
+    const originalParent = req.query.parent as string;
+    const originalIsInternalResponse = req.query.isInternalResponse as string;
 
-    req.query.lgbtqia = parseBooleanQueryParam(req.query.lgbtqia as string);
-    req.query.parent = parseBooleanQueryParam(req.query.parent as string);
-    req.query.isInternalResponse = parseBooleanQueryParam(req.query.isInternalResponse as string);
+    req.parsedQuery = {
+        lgbtqia: parseBooleanQueryParam(originalLgbtqia),
+        parent: parseBooleanQueryParam(originalParent),
+        isInternalResponse: parseBooleanQueryParam(originalIsInternalResponse)
+    };
 
     const errors: string[] = [];
-    if (req.query.lgbtqia === undefined && originalLgbtqia !== undefined) {
+    if (req.parsedQuery.lgbtqia === undefined && originalLgbtqia !== undefined) {
         errors.push("Invalid value for 'lgbtqia'; must be 'true', 'false', or 'null'.");
     }
-    if (req.query.parent === undefined && originalParent !== undefined) {
+    if (req.parsedQuery.parent === undefined && originalParent !== undefined) {
         errors.push("Invalid value for 'parent'; must be 'true', 'false', or 'null'.");
     }
-    if (req.query.isInternalResponse === undefined && originalIsInternalResponse !== undefined) {
+    if (req.parsedQuery.isInternalResponse === undefined && originalIsInternalResponse !== undefined) {
         errors.push("Invalid value for 'isInternalResponse'; must be 'true', 'false', or 'null'.");
     }
 
