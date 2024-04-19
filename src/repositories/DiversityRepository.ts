@@ -3,9 +3,12 @@ import path from 'path';
 import { PrismaClient } from '@prisma/client';
 import { Question } from '../models/Question';
 import { SubmissionData } from '../models/SubmissionData';
+import { IDiversityRepository } from './IDiversityRepository';
 import { DiversityQueryParams } from '../models/DiversityQueryParams';
+import { convertStringToBooleanOrNull } from '../utils/ConverterRequestParams';
 
-class DiversityRepository {
+
+class DiversityRepository implements IDiversityRepository {
     private filePath = path.join(__dirname, '../../resources/questions.json');
     private prisma = new PrismaClient();
 
@@ -20,7 +23,6 @@ class DiversityRepository {
     }
 
     public async saveResponse(data: SubmissionData) {
-
         const ageGroup = await this.prisma.ageGroup.findUnique({
             where: { code: data.ageGroupCode }
         });
@@ -57,30 +59,30 @@ class DiversityRepository {
     public async getDiversityResponses(queryParams: DiversityQueryParams): Promise<any> {
         const conditions: any = {};
 
-        if (queryParams.ageGroupCode) {
+        if (queryParams.ageGroup) {
             const ageGroup = await this.prisma.ageGroup.findFirst({
-                where: { code: queryParams.ageGroupCode }
+                where: { code: queryParams.ageGroup }
             });
             if (ageGroup) conditions.ageGroup = { code: ageGroup.code, description: ageGroup.description };
         }
 
-        if (queryParams.genderCode) {
+        if (queryParams.gender) {
             const gender = await this.prisma.gender.findFirst({
-                where: { code: queryParams.genderCode }
+                where: { code: queryParams.gender }
             });
             if (gender) conditions.gender = { code: gender.code, value: gender.value };
         }
 
-        if (queryParams.ethnicityCode) {
+        if (queryParams.ethnicity) {
             const ethnicity = await this.prisma.ethnicity.findFirst({
-                where: { code: queryParams.ethnicityCode }
+                where: { code: queryParams.ethnicity }
             });
             if (ethnicity) conditions.ethnicity = { code: ethnicity.code, value: ethnicity.value };
         }
 
-        if (queryParams.disabilityCode) {
+        if (queryParams.disability) {
             const disability = await this.prisma.disability.findFirst({
-                where: { code: queryParams.disabilityCode }
+                where: { code: queryParams.disability }
             });
             if (disability) conditions.disability = { code: disability.code, value: disability.value };
         }
@@ -102,160 +104,73 @@ class DiversityRepository {
                 createdAt: true
             }
         });
-
         return responses;
     }
 
-
-
-    // public async getDiversityStats(queryParams: DiversityQueryParams): Promise<any> {
-    //     const conditions: any = {};
-
-    //     const queriesUsed: any = {};
-    //     Object.entries(queryParams).forEach(([key, value]) => {
-    //         if (value !== undefined) {
-    //             queriesUsed[key] = value;
-    //         }
-    //     });
-
-    //     if (queryParams.ageGroupCode) {
-    //         const ageGroup = await this.prisma.ageGroup.findUnique({
-    //             where: { code: queryParams.ageGroupCode }
-    //         });
-    //         if (ageGroup) conditions.ageGroupId = ageGroup.id;
-    //     }
-
-    //     if (queryParams.genderCode) {
-    //         const gender = await this.prisma.gender.findUnique({
-    //             where: { code: queryParams.genderCode }
-    //         });
-    //         if (gender) conditions.genderId = gender.id;
-    //     }
-
-    //     if (queryParams.ethnicityCode) {
-    //         const ethnicity = await this.prisma.ethnicity.findUnique({
-    //             where: { code: queryParams.ethnicityCode }
-    //         });
-    //         if (ethnicity) conditions.ethnicityId = ethnicity.id;
-    //     }
-
-    //     if (queryParams.disabilityCode) {
-    //         const disability = await this.prisma.disability.findUnique({
-    //             where: { code: queryParams.disabilityCode }
-    //         });
-    //         if (disability) conditions.disabilityId = disability.id;
-    //     }
-
-    //     if (queryParams.lgbtqia !== undefined) conditions.lgbtqia = queryParams.lgbtqia;
-    //     if (queryParams.parent !== undefined) conditions.parent = queryParams.parent;
-    //     if (queryParams.isInternalResponse !== undefined) conditions.isInternalResponse = queryParams.isInternalResponse;
-
-    //     const responseCount = await this.prisma.diversityResponse.count({
-    //         where: conditions
-    //     });
-
-    //     const totalCount = await this.prisma.diversityResponse.count({});
-
-    //     const internalCount = await this.prisma.diversityResponse.count({
-    //         where: { isInternalResponse: true }
-    //     });
-
-    //     const externalCount = await this.prisma.diversityResponse.count({
-    //         where: { isInternalResponse: false }
-    //     });
-
-    //     return {
-    //         queriesUsed,
-    //         totalCount,
-    //         responseCount,            
-    //         internalCount,
-    //         externalCount
-    //     };
-    // }
-
     public async getDiversityStats(queryParams: DiversityQueryParams): Promise<any> {
-        console.log("queryParams:", queryParams); // Log the entire queryParams object
-    
         const conditions: any = {};
+
         const queriesUsed: any = {};
-    
         Object.entries(queryParams).forEach(([key, value]) => {
-            console.log(`Key: ${key}, Value: ${value}, Type: ${typeof value}`); // Log key, value, and type
-    
             if (value !== undefined) {
                 queriesUsed[key] = value;
             }
         });
-    
-        if (queryParams.ageGroupCode) {
-            console.log("Age group code:", queryParams.ageGroupCode);
-    
+
+        if (queryParams.ageGroup) {
             const ageGroup = await this.prisma.ageGroup.findUnique({
-                where: { code: queryParams.ageGroupCode }
+                where: { code: queryParams.ageGroup }
             });
-    
             if (ageGroup) conditions.ageGroupId = ageGroup.id;
         }
-    
-        if (queryParams.genderCode) {
-            console.log("Gender code:", queryParams.genderCode);
-    
+
+        if (queryParams.gender) {
             const gender = await this.prisma.gender.findUnique({
-                where: { code: queryParams.genderCode }
+                where: { code: queryParams.gender }
             });
-    
             if (gender) conditions.genderId = gender.id;
         }
-    
-        if (queryParams.ethnicityCode) {
-            console.log("Ethnicity code:", queryParams.ethnicityCode);
-    
+
+        if (queryParams.ethnicity) {
             const ethnicity = await this.prisma.ethnicity.findUnique({
-                where: { code: queryParams.ethnicityCode }
+                where: { code: queryParams.ethnicity }
             });
-    
             if (ethnicity) conditions.ethnicityId = ethnicity.id;
         }
-    
-        if (queryParams.disabilityCode) {
-            console.log("Disability code:", queryParams.disabilityCode);
-    
+
+        if (queryParams.disability) {
             const disability = await this.prisma.disability.findUnique({
-                where: { code: queryParams.disabilityCode }
+                where: { code: queryParams.disability }
             });
-    
             if (disability) conditions.disabilityId = disability.id;
         }
-    
+
         if (queryParams.lgbtqia !== undefined) {
-            console.log("LGBTQIA+:", queryParams.lgbtqia);
-            conditions.lgbtqia = queryParams.lgbtqia;
+            conditions.lgbtqia = convertStringToBooleanOrNull(queryParams.lgbtqia as unknown as string);
         }
-    
         if (queryParams.parent !== undefined) {
-            console.log("Parent:", queryParams.parent);
-            conditions.parent = queryParams.parent;
+            conditions.parent = convertStringToBooleanOrNull(queryParams.parent as unknown as string);
         }
-    
         if (queryParams.isInternalResponse !== undefined) {
-            console.log("Is internal response:", queryParams.isInternalResponse);
-            conditions.isInternalResponse = queryParams.isInternalResponse;
+            conditions.isInternalResponse = convertStringToBooleanOrNull(queryParams.isInternalResponse as unknown as string);
         }
-    
+
+        console.log("Conditions used for the query:", conditions);
+
         const responseCount = await this.prisma.diversityResponse.count({
             where: conditions
         });
-    
+
         const totalCount = await this.prisma.diversityResponse.count({});
-    
+
         const internalCount = await this.prisma.diversityResponse.count({
             where: { isInternalResponse: true }
         });
-    
+
         const externalCount = await this.prisma.diversityResponse.count({
             where: { isInternalResponse: false }
         });
-    
+
         return {
             queriesUsed,
             totalCount,

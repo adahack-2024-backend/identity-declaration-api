@@ -1,8 +1,9 @@
+import { IDiversityService } from '../services/IDiversityService';
 import { DiversityQueryParams } from '../models/DiversityQueryParams';
 import { SubmissionData } from '../models/SubmissionData';
 import { diversityRepository } from '../repositories/DiversityRepository';
 
-class DiversityService {
+class DiversityService implements IDiversityService {
     async getQuestions() {
         return diversityRepository.getQuestions();
     }
@@ -20,6 +21,4 @@ class DiversityService {
     }
 }
 
-const diversityService = new DiversityService();
-
-export { diversityService }
+export { DiversityService };

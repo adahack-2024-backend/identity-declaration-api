@@ -1,10 +1,15 @@
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { hash, compare } from 'bcrypt';
 import { CreateUserRequest } from '../models/CreateUserRequest';
+import { IUserRepository } from './IUserRepository'; 
 import { UserResponse } from '../models/UserReponse';
 
-class UserRepository {
-    private prisma = new PrismaClient();
+class UserRepository implements IUserRepository {
+    private prisma: PrismaClient;
+
+    constructor(prismaClient: PrismaClient) {
+        this.prisma = prismaClient;
+    }
 
     async create(user: CreateUserRequest): Promise<UserResponse> {
         const email = user.email;
@@ -34,9 +39,5 @@ class UserRepository {
 
     async comparePassword(userPassword: string, candidatePassword: string): Promise<boolean> {
         return await compare(candidatePassword, userPassword);
-      }
+    }
 }
-
-const userRepository = new UserRepository();
-
-export { userRepository }

@@ -5,10 +5,8 @@ import { authMiddleware } from '../middleware/AuthMiddleware';
 
 const userRoutes = express.Router();
 
-//Get
 userRoutes.get('/users', authMiddleware, userController.findAll);
 
-//Post
 userRoutes.post('/user', validateUserData, userController.create);
 
 export { userRoutes }

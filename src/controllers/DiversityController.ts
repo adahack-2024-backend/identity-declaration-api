@@ -1,13 +1,19 @@
 import { Request, Response } from 'express';
 import { SubmissionData } from '../models/SubmissionData';
-import { diversityService } from '../services/DiversityService';
+import { IDiversityService } from '../services/IDiversityService';
 import logger from '../utils/logger';
 import { DiversityQueryParams } from '../models/DiversityQueryParams';
 
 class DiversityController {
+    private diversityService: IDiversityService;
+
+    constructor(diversityService: IDiversityService) {
+        this.diversityService = diversityService;
+    }
+
     public async getQuestions(req: Request, res: Response) {
         try {
-            const questions = await diversityService.getQuestions();
+            const questions = await this.diversityService.getQuestions();
             res.json({ questions });
         } catch (error) {
             logger.error("Error fetching questions: %s", error);
@@ -18,7 +24,7 @@ class DiversityController {
     public async submitResponse(req: Request, res: Response) {
         try {
             const data: SubmissionData = req.body.responses;
-            await diversityService.submitResponse(data);
+            await this.diversityService.submitResponse(data);
             res.json({
                 status: 'success',
                 message: 'Responses submitted successfully.'
@@ -32,7 +38,7 @@ class DiversityController {
     public async getDiversityResponses(req: Request, res: Response) {
         try {
             const queryParams: DiversityQueryParams = req.query;
-            const responses = await diversityService.getDiversityResponses(queryParams);
+            const responses = await this.diversityService.getDiversityResponses(queryParams);
             res.json({ responses });
         } catch (error) {
             logger.error("Error fetching diversity responses: %s", error);
@@ -43,7 +49,7 @@ class DiversityController {
     public async getDiversityStats(req: Request, res: Response) {
         try {
             const queryParams: DiversityQueryParams = req.query;
-            const responses = await diversityService.getDiversityStats(queryParams);
+            const responses = await this.diversityService.getDiversityStats(queryParams);
             res.json({ responses });
         } catch (error) {
             if (error instanceof Error) {
@@ -56,6 +62,4 @@ class DiversityController {
     }
 }
 
-const diversityController = new DiversityController();
-
-export { diversityController }
+export { DiversityController };
