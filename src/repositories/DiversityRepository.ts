@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Question } from '../models/Question';
-// import { SubmissionData } from '../models/SubmissionData';
+import { SubmissionData } from '../models/SubmissionData';
 import { IDiversityRepository } from '../contracts/IDiversityRepository';
 // import { DiversityQueryParams } from '../models/DiversityQueryParams';
 // import { convertStringToBooleanOrNull } from '../utils/ConverterRequestParams';
@@ -11,11 +11,11 @@ class DiversityRepository implements IDiversityRepository {
     private filePath = path.join(__dirname, '../../resources/questions.json');
     private prisma = PrismaClient;
 
-    constructor(prismaClient: PrismaClient){
+    constructor(prismaClient: PrismaClient) {
         this.prisma = prismaClient;
     }
 
-    
+
 
     public async getQuestions(): Promise<Question[]> {
         try {
@@ -27,39 +27,39 @@ class DiversityRepository implements IDiversityRepository {
         }
     }
 
-    // public async saveResponse(data: SubmissionData) {
-    //     const ageGroup = await this.prisma.ageGroup.findUnique({
-    //         where: { code: data.ageGroupCode }
-    //     });
+    public async saveResponse(data: SubmissionData) {
+        const ageGroup = await this.prisma.ageGroup.findUnique({
+            where: { code: data.ageGroupCode }
+        });
 
-    //     const gender = await this.prisma.gender.findUnique({
-    //         where: { code: data.genderCode }
-    //     });
+        const gender = await this.prisma.gender.findUnique({
+            where: { code: data.genderCode }
+        });
 
-    //     const ethnicity = await this.prisma.ethnicity.findUnique({
-    //         where: { code: data.ethnicityCode }
-    //     });
+        const ethnicity = await this.prisma.ethnicity.findUnique({
+            where: { code: data.ethnicityCode }
+        });
 
-    //     const disability = await this.prisma.disability.findUnique({
-    //         where: { code: data.disabilityCode }
-    //     });
+        const disability = await this.prisma.disability.findUnique({
+            where: { code: data.disabilityCode }
+        });
 
-    //     if (!ageGroup || !gender || !ethnicity || !disability) {
-    //         throw new Error('One of the entities was not found.');
-    //     }
+        if (!ageGroup || !gender || !ethnicity || !disability) {
+            throw new Error('One of the entities was not found.');
+        }
 
-    //     return this.prisma.diversityResponse.create({
-    //         data: {
-    //             ageGroupId: ageGroup.id,
-    //             genderId: gender.id,
-    //             ethnicityId: ethnicity.id,
-    //             disabilityId: disability.id,
-    //             lgbtqia: data.lgbtqia,
-    //             parent: data.parent,
-    //             isInternalResponse: data.isInternalResponse
-    //         }
-    //     });
-    // }
+        return this.prisma.diversityResponse.create({
+            data: {
+                ageGroupId: ageGroup.id,
+                genderId: gender.id,
+                ethnicityId: ethnicity.id,
+                disabilityId: disability.id,
+                lgbtqia: data.lgbtqia,
+                parent: data.parent,
+                isInternalResponse: data.isInternalResponse
+            }
+        });
+    }
 
     // public async getDiversityResponses(queryParams: DiversityQueryParams): Promise<any> {
     //     const conditions: any = {};

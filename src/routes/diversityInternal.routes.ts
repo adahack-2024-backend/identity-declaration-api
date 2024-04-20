@@ -2,8 +2,8 @@ import express from 'express';
 import { DiversityController } from '../controllers/DiversityController';
 import { diversityController } from '../config/dependencyInjector';
 // import { authMiddleware } from '../middleware/AuthMiddleware';
-// import { validateSubmission } from '../middleware/ValidateSubmissionMiddleware';
-// import { internalFlagMiddleware } from '../middleware/InternalFlagMiddleware';
+import { validateSubmission } from '../middleware/ValidateSubmissionMiddleware';
+import { internalFlagMiddleware } from '../middleware/InternalFlagMiddleware';
 // import { validateQueryParamsMiddleware } from '../middleware/ValidateQueryParams';
 
 export function diversityInternalRoutes(router: express.Router, diversityController: DiversityController) {
@@ -13,7 +13,13 @@ export function diversityInternalRoutes(router: express.Router, diversityControl
         //authMiddleware,
         diversityController.getQuestions.bind(diversityController)
     );
-    // router.post('/diversity/internal/submit', validateSubmission, authMiddleware, internalFlagMiddleware, diversityController.submitResponse);
+    router.post(
+        '/diversity/internal/submit',
+        validateSubmission,
+        //authMiddleware,
+        internalFlagMiddleware,
+        diversityController.submitResponse.bind(diversityController)
+    );
     // router.get('/diversity/internal/responses', validateQueryParamsMiddleware, authMiddleware, diversityController.getDiversityResponses);
     // router.get('/diversity/internal/responses/stats', validateQueryParamsMiddleware, authMiddleware, diversityController.getDiversityStats);
 

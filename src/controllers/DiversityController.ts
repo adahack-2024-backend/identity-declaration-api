@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-//import { SubmissionData } from '../models/SubmissionData';
+import { SubmissionData } from '../models/SubmissionData';
 import { IDiversityService } from '../contracts/IDiversityService';
 import logger from '../utils/logger';
-//import { DiversityQueryParams } from '../models/DiversityQueryParams';
+import { DiversityQueryParams } from '../models/DiversityQueryParams';
 
 class DiversityController {
     private diversityService: IDiversityService;
@@ -21,19 +21,20 @@ class DiversityController {
         }
     }
 
-    // public async submitResponse(req: Request, res: Response) {
-    //     try {
-    //         const data: SubmissionData = req.body.responses;
-    //         await this.diversityService.submitResponse(data);
-    //         res.json({
-    //             status: 'success',
-    //             message: 'Responses submitted successfully.'
-    //         });
-    //     } catch (error) {
-    //         logger.error("Error submitting responses: %s", error);
-    //         res.status(500).send('Internal server error.');
-    //     }
-    // }
+    public async submitResponse(req: Request, res: Response) {
+        try {
+            const data: SubmissionData = req.body.responses;
+            console.log("Body recebido: ", data);
+            await this.diversityService.submitResponse(data);
+            res.json({
+                status: 'success',
+                message: 'Responses submitted successfully.'
+            });
+        } catch (error) {
+            logger.error("Error submitting responses: %s", error);
+            res.status(500).send('Internal server error.');
+        }
+    }
 
     // public async getDiversityResponses(req: Request, res: Response) {
     //     try {
