@@ -1,39 +1,44 @@
-// import { Request, Response } from "express";
+import { Request, Response } from "express";
 // import { userService } from "../services/UserService";
-// import { CreateUserRequest } from "../models/CreateUserRequest";
-// import logger from '../utils/logger';
+import { CreateUserRequest } from "../models/CreateUserRequest";
+import logger from '../utils/logger';
+import { IUserService } from "../contracts/IUserService";
 
-// class UserController {
-//     async create(req: Request, res: Response) {
-//         try {
-//             const { email, password } = req.body;
+class UserController {
+    private userService: IUserService;
 
-//             const userExist = await userService.findByEmail(email);
-//             if (userExist) {
-//                 return res.status(409).json({ message: 'User already exists!' });
-//             }
+    constructor(userService: IUserService){
+        this.userService = userService;
+    }
 
-//             const createUserRequest: CreateUserRequest = { email, password };
-//             const newUser = await userService.create(createUserRequest);
+    async create(req: Request, res: Response) {
+        try {
+            const { email, password } = req.body;
 
-//             res.status(201).json(newUser);
-//         } catch (error) {
-//             logger.error('Error creating user: %s', error);
-//             res.status(500).json({ error: 'Internal server error' });
-//         }
-//     }
+            const userExist = await this.userService.findByEmail(email);
+            if (userExist) {
+                return res.status(409).json({ message: 'User already exists!' });
+            }
 
-//     async findAll(req: Request, res: Response) {
-//         try {
-//             const users = await userService.findAll();
-//             return res.status(200).send(users)
-//         } catch (error) {
-//             logger.error('Error creating user: %s', error);
-//             res.status(500).json({ error: 'Internal server error' });
-//         }
-//     }
-// }
+            const createUserRequest: CreateUserRequest = { email, password };
+            const newUser = await this.userService.create(createUserRequest);
 
-// const userController = new UserController();
+            res.status(201).json(newUser);
+        } catch (error) {
+            logger.error('Error creating user: %s', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
 
-// export { userController };
+    async findAll(req: Request, res: Response) {
+        try {
+            const users = await this.userService.findAll();
+            return res.status(200).send(users)
+        } catch (error) {
+            logger.error('Error creating user: %s', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export { UserController };

@@ -4,7 +4,6 @@ import { Question } from '../models/Question';
 import { SubmissionData } from '../models/SubmissionData';
 import { IDiversityRepository } from '../contracts/IDiversityRepository';
 import { DiversityQueryParams } from '../models/DiversityQueryParams';
-// import { convertStringToBooleanOrNull } from '../utils/ConverterRequestParams';
 import { PrismaClient } from '@prisma/client/extension';
 import { convertStringToBooleanOrNull } from '../utils/ConverterRequestParams';
 
