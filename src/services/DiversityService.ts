@@ -19,9 +19,9 @@ class DiversityService implements IDiversityService {
         return this.diversityRepository.getDiversityResponses(queryParams);
     }
 
-    // async getDiversityStats(queryParams: DiversityQueryParams) {
-    //     return this.diversityRepository.getDiversityStats(queryParams);
-    // }
+    async getDiversityStats(queryParams: DiversityQueryParams) {
+        return this.diversityRepository.getDiversityStats(queryParams);
+    }
 }
 
 export { DiversityService };

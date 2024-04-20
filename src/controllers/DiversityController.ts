@@ -48,20 +48,20 @@ class DiversityController {
         }
     }
 
-    // public async getDiversityStats(req: Request, res: Response) {
-    //     try {
-    //         const queryParams: DiversityQueryParams = req.query;
-    //         const responses = await this.diversityService.getDiversityStats(queryParams);
-    //         res.json({ responses });
-    //     } catch (error) {
-    //         if (error instanceof Error) {
-    //             logger.error("Error fetching diversity responses: %s", error);
-    //             logger.error(error.stack);
-    //             res.status(500).send('Error retrieving diversity responses.');
-    //         }
+    public async getDiversityStats(req: Request, res: Response) {
+        try {
+            const queryParams: DiversityQueryParams = req.query;
+            const responses = await this.diversityService.getDiversityStats(queryParams);
+            res.json({ responses });
+        } catch (error) {
+            if (error instanceof Error) {
+                logger.error("Error fetching diversity responses: %s", error);
+                logger.error(error.stack);
+                res.status(500).send('Error retrieving diversity responses.');
+            }
 
-    //     }
-    // }
+        }
+    }
 }
 
 export { DiversityController };

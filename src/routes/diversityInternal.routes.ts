@@ -21,12 +21,17 @@ export function diversityInternalRoutes(router: express.Router, diversityControl
         diversityController.submitResponse.bind(diversityController)
     );
     router.get(
-        '/diversity/internal/responses', 
-        validateQueryParamsMiddleware, 
+        '/diversity/internal/responses',
+        validateQueryParamsMiddleware,
         //authMiddleware, 
         diversityController.getDiversityResponses.bind(diversityController)
     );
-    // router.get('/diversity/internal/responses/stats', validateQueryParamsMiddleware, authMiddleware, diversityController.getDiversityStats);
+    router.get(
+        '/diversity/internal/responses/stats',
+        validateQueryParamsMiddleware,
+        //authMiddleware,
+        diversityController.getDiversityStats.bind(diversityController)
+    );
 
     return router;
 }
