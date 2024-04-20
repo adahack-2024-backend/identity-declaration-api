@@ -1,6 +1,5 @@
 import express from 'express';
 import { DiversityController } from '../controllers/DiversityController';
-import { diversityController } from '../config/dependencyInjector';
 // import { authMiddleware } from '../middleware/AuthMiddleware';
 import { validateSubmission } from '../middleware/ValidateSubmissionMiddleware';
 import { internalFlagMiddleware } from '../middleware/InternalFlagMiddleware';

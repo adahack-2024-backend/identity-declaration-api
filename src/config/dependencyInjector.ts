@@ -4,13 +4,15 @@ import { DiversityService } from '../services/DiversityService';
 import { DiversityController } from '../controllers/DiversityController';
 import { prismaClient } from './prismaClient';
 import { diversityInternalRoutes } from '../routes/diversityInternal.routes';
+import { diversityExternalRoutes } from '../routes/diversityExternal.routes';
 
 const diversityRepository = new DiversityRepository(prismaClient);
 const diversityService = new DiversityService(diversityRepository);
 const diversityController = new DiversityController(diversityService);
 
 const mainRouter = express.Router();
-diversityInternalRoutes(mainRouter, diversityController); 
+diversityInternalRoutes(mainRouter, diversityController);
+diversityExternalRoutes(mainRouter, diversityController);
 
 export {
     diversityRepository,
