@@ -1,16 +1,3 @@
-import express from 'express';
-import { authRoute } from './login.routes';
-import { diversityExternalRoutes } from './diversityExternal.routes';
-import { diversityInternalRoutes } from './diversityInternal.routes';
-import { userRoutes } from './user.routes';
+import { mainRouter } from '../config/dependencyInjector';
+export default mainRouter;
 
-const router = express.Router();
-
-router.use(
-    diversityExternalRoutes,
-    authRoute,
-    diversityInternalRoutes,
-    userRoutes    
-);
-
-export default router;

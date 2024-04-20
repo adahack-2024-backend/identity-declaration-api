@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-import { hash, compare } from 'bcrypt';
+import { PrismaClient } from '@prisma/client/extension';
+import { IUserRepository } from '../contracts/IUserRepository';
 import { CreateUserRequest } from '../models/CreateUserRequest';
-import { IUserRepository } from './IUserRepository'; 
 import { UserResponse } from '../models/UserReponse';
+import { User } from '@prisma/client';
+import { compare, hash } from 'bcrypt';
 
 class UserRepository implements IUserRepository {
     private prisma: PrismaClient;
@@ -27,13 +28,13 @@ class UserRepository implements IUserRepository {
         return newUser;
     }
 
-    async findByEmail(email: string) {
+    async findByEmail(email: string): Promise<User | null> {
         return this.prisma.user.findUnique({
             where: { email }
         });
     }
 
-    async findAll() {
+    async findAll(): Promise<User[]> {
         return this.prisma.user.findMany();
     }
 
@@ -41,3 +42,5 @@ class UserRepository implements IUserRepository {
         return await compare(candidatePassword, userPassword);
     }
 }
+
+export { UserRepository };
